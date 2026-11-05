@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="La Esquina: catálogo demostrativo de licores. Proyecto educativo.">
+<title>La Esquina | Licorería</title>
+<style>
+:root{
+  --fondo:#0f0c14; --tarjeta:#1a1523; --texto:#f3eee6; --suave:#b9b0c4;
+  --oro:#e0b04a; --oro2:#ffd978; --rojo:#c0392b; --borde:#2d2540;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Arial,sans-serif;background:var(--fondo);color:var(--texto);line-height:1.6}
+a{color:inherit;text-decoration:none}
+
+/* CABECERA */
+.cabecera{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding:.9rem 5%;background:rgba(15,12,20,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--borde)}
+.marca{font-size:1.5rem;font-weight:800;letter-spacing:1px;color:var(--oro)}
+.marca span{color:var(--texto)}
+.menu{display:flex;gap:1.5rem;align-items:center}
+.menu a{color:var(--suave);transition:.2s}
+.menu a:hover{color:var(--oro2)}
+.btn-carrito{background:var(--oro);color:#1a1200;border:0;padding:.55rem 1rem;border-radius:2rem;font-weight:700;cursor:pointer;transition:.2s}
+.btn-carrito:hover{background:var(--oro2);transform:translateY(-2px)}
+.menu-boton{display:none;background:none;border:1px solid var(--borde);color:var(--texto);padding:.4rem .8rem;border-radius:.5rem;cursor:pointer}
+
+/* HERO */
+.hero{min-height:78vh;display:grid;place-items:center;text-align:center;padding:4rem 5%;
+  background:radial-gradient(circle at 50% 0%,#3b2a63 0%,transparent 60%),
+             radial-gradient(circle at 85% 90%,#6b3a12 0%,transparent 50%),var(--fondo)}
+.etiqueta{display:inline-block;border:1px solid var(--oro);color:var(--oro2);padding:.3rem 1rem;border-radius:2rem;font-size:.85rem;letter-spacing:2px;margin-bottom:1.2rem}
+.hero h1{font-size:clamp(2.4rem,7vw,5rem);line-height:1.05;max-width:900px;margin:0 auto 1rem}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--oro),var(--oro2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--suave);max-width:620px;margin:0 auto 2rem;font-size:1.15rem}
+.boton{display:inline-block;background:linear-gradient(90deg,var(--oro),var(--oro2));color:#1a1200;font-weight:800;
+  padding:.9rem 2rem;border-radius:3rem;border:0;cursor:pointer;transition:.25s;box-shadow:0 8px 25px #e0b04a40}
+.boton:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 12px 30px #e0b04a66}
+
+/* BENEFICIOS */
+.beneficios{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;padding:2rem 5%}
+.beneficio{background:var(--tarjeta);border:1px solid var(--borde);border-radius:1rem;padding:1.2rem;text-align:center}
+.beneficio b{display:block;font-size:1.8rem}
+.beneficio span{color:var(--suave);font-size:.95rem}
+
+/* CATALOGO */
+.seccion{padding:3rem 5%}
+.seccion h2{font-size:clamp(1.8rem,4vw,2.6rem);text-align:center}
+.subtitulo{text-align:center;color:var(--suave);margin:.5rem 0 2rem}
+.herramientas{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;align-items:center;margin-bottom:2rem}
+.filtro{background:transparent;border:1px solid var(--borde);color:var(--suave);padding:.5rem 1.1rem;border-radius:2rem;cursor:pointer;transition:.2s}
+.filtro:hover{border-color:var(--oro);color:var(--oro2)}
+.filtro.activo{background:var(--oro);color:#1a1200;border-color:var(--oro);font-weight:700}
+#busqueda{background:var(--tarjeta);border:1px solid var(--borde);color:var(--texto);padding:.6rem 1rem;border-radius:2rem;width:min(100%,260px)}
+#busqueda:focus{outline:2px solid var(--oro)}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.4rem}
+.producto{position:relative;background:var(--tarjeta);border:1px solid var(--borde);border-radius:1.2rem;padding:1.2rem;
+  display:flex;flex-direction:column;transition:.3s}
+.producto:hover{transform:translateY(-8px);border-color:var(--oro);box-shadow:0 18px 40px #00000080}
+.producto[hidden]{display:none}
+.insignia{position:absolute;top:.8rem;left:.8rem;background:var(--rojo);color:white;font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:1rem;z-index:2}
+.imagen{height:230px;display:grid;place-items:center;border-radius:.9rem;margin-bottom:1rem;
+  background:radial-gradient(circle at 50% 40%,#2e2540,#15101d)}
+.imagen svg{height:200px;filter:drop-shadow(0 10px 12px #000a);transition:.3s}
+.producto:hover .imagen svg{transform:scale(1.08) rotate(-3deg)}
+.categoria{color:var(--oro);font-size:.78rem;letter-spacing:2px;text-transform:uppercase}
+.producto h3{font-size:1.2rem;margin:.2rem 0}
+.producto p.desc{color:var(--suave);font-size:.92rem;flex:1}
+.fila{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;gap:.5rem}
+.precio{font-size:1.4rem;font-weight:800;color:var(--oro2)}
+.btn-agregar{background:var(--oro);color:#1a1200;border:0;padding:.6rem 1rem;border-radius:2rem;font-weight:700;cursor:pointer;transition:.2s}
+.btn-agregar:hover{background:var(--oro2);transform:scale(1.06)}
+.btn-detalle{background:transparent;border:1px solid var(--borde);color:var(--texto);width:100%;margin-top:.6rem;padding:.5rem;border-radius:2rem;cursor:pointer;transition:.2s}
+.btn-detalle:hover{border-color:var(--oro);color:var(--oro2)}
+.vacio{text-align:center;color:var(--suave);margin-top:2rem}
+.oculto{display:none!important}
+
+/* CARRITO */
+.panel{position:fixed;top:0;right:-420px;width:min(100%,400px);height:100%;background:var(--tarjeta);z-index:100;
+  padding:1.5rem;transition:.35s;border-left:1px solid var(--borde);display:flex;flex-direction:column;overflow-y:auto}
+.panel.abierto{right:0}
+.panel h3{margin-bottom:1rem;color:var(--oro)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.7rem 0;border-bottom:1px solid var(--borde)}
+.item small{color:var(--suave)}
+.item button{background:none;border:1px solid var(--borde);color:var(--texto);width:28px;height:28px;border-radius:50%;cursor:pointer}
+.item button:hover{border-color:var(--oro)}
+.total{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:800;margin:1rem 0}
+.cerrar{align-self:flex-end;background:none;border:0;color:var(--texto);font-size:1.6rem;cursor:pointer}
+.fondo-oscuro{position:fixed;inset:0;background:#000a;z-index:90;opacity:0;pointer-events:none;transition:.3s}
+.fondo-oscuro.visible{opacity:1;pointer-events:auto}
+
+/* MODALES */
+.modal{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#000d;padding:1rem}
+.modal-caja{background:var(--tarjeta);border:1px solid var(--oro);border-radius:1.4rem;padding:2rem;max-width:460px;width:100%;text-align:center}
+.modal-caja h2{color:var(--oro2);margin-bottom:.6rem}
+.modal-caja p{color:var(--suave);margin-bottom:1.2rem}
+.modal-caja .imagen{height:220px}
+.botones{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+.btn-sec{background:transparent;border:1px solid var(--borde);color:var(--texto);padding:.8rem 1.6rem;border-radius:3rem;cursor:pointer}
+.btn-sec:hover{border-color:var(--rojo);color:#ff8a7d}
+
+/* TOAST */
+.aviso{position:fixed;bottom:1.5rem;left:50%;transform:translate(-50%,120px);background:var(--oro);color:#1a1200;font-weight:700;
+  padding:.8rem 1.4rem;border-radius:3rem;z-index:300;transition:.35s}
+.aviso.visible{transform:translate(-50%,0)}
+
+/* PIE */
+.pie{margin-top:3rem;padding:2rem 5%;background:#090710;color:var(--suave);text-align:center;font-size:.9rem;border-top:1px solid var(--borde)}
+.pie strong{color:var(--oro2)}
+
+@media(max-width:760px){
+  .menu-boton{display:inline-block}
+  .menu{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:#0f0c14;padding:1rem 5%;border-bottom:1px solid var(--borde)}
+  .menu.abierto{display:flex}
+}
+</style>
+</head>
+<body>
+
+<!-- VERIFICACION DE EDAD -->
+<div class="modal" id="modalEdad">
+  <div class="modal-caja">
+    <h2>🔞 Solo para mayores de 18</h2>
+    <p>Para entrar a La Esquina debes tener la edad legal para consumir bebidas alcohólicas.</p>
+    <div class="botones">
+      <button class="boton" id="btnSoyMayor">Soy mayor de 18</button>
+      <button class="btn-sec" id="btnSoyMenor">Soy menor</button>
+    </div>
+  </div>
+</div>
+
+<header class="cabecera">
+  <a class="marca" href="#inicio">LA<span> ESQUINA</span></a>
+  <button class="menu-boton" id="menuBoton" aria-expanded="false" aria-controls="menuPrincipal">☰ Menú</button>
+  <nav class="menu" id="menuPrincipal" aria-label="Navegación principal">
+    <a href="#inicio">Inicio</a>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#contacto">Contacto</a>
+    <button class="btn-carrito" id="btnCarrito">🛒 Carrito (<span id="contador">0</span>)</button>
+  </nav>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div>
+      <span class="etiqueta">CATÁLOGO DEMOSTRATIVO</span>
+      <h1>La noche empieza en <em>La Esquina</em></h1>
+      <p>Whisky, ron, tequila, vino y mucho más. Descubre una selección premium pensada para brindar con estilo.</p>
+      <a class="boton" href="#catalogo">🥃 Ver el catálogo</a>
+    </div>
+  </section>
+
+  <section class="beneficios">
+    <div class="beneficio"><b>🍾</b><strong>10 licores estrella</strong><br><span>Selección para todos los gustos</span></div>
+    <div class="beneficio"><b>🎁</b><strong>Combos especiales</strong><br><span>Ideales para fiestas y regalos</span></div>
+    <div class="beneficio"><b>⭐</b><strong>Calidad premium</strong><br><span>Marcas ficticias de demostración</span></div>
+    <div class="beneficio"><b>🤝</b><strong>Consumo responsable</strong><br><span>Si bebes, no conduzcas</span></div>
+  </section>
+
+  <section class="seccion" id="catalogo">
+    <h2>Nuestro <span style="color:var(--oro)">catálogo</span></h2>
+    <p class="subtitulo">Elige tu favorito, agrégalo al carrito y brinda a lo grande.</p>
+
+    <div class="herramientas">
+      <button class="filtro activo" data-cat="Todos">Todos</button>
+      <button class="filtro" data-cat="Whisky">Whisky</button>
+      <button class="filtro" data-cat="Ron">Ron</button>
+      <button class="filtro" data-cat="Vodka">Vodka</button>
+      <button class="filtro" data-cat="Tequila">Tequila</button>
+      <button class="filtro" data-cat="Gin">Gin</button>
+      <button class="filtro" data-cat="Vino">Vino</button>
+      <button class="filtro" data-cat="Cerveza">Cerveza</button>
+      <button class="filtro" data-cat="Otros">Otros</button>
+      <input id="busqueda" type="search" placeholder="🔍 Buscar licor..." aria-label="Buscar licor">
+    </div>
+
+    <div class="rejilla" id="rejilla"></div>
+    <p class="vacio oculto" id="sinResultados">😕 No encontramos ese licor. Prueba con otra palabra.</p>
+  </section>
+</main>
+
+<footer class="pie" id="contacto">
+  <p><strong>La Esquina</strong> · Proyecto educativo: productos, precios y marcas ficticios. No procesa pedidos ni pagos.</p>
+  <p>Venta de bebidas alcohólicas únicamente a personas con edad legal. El exceso de alcohol es perjudicial para la salud. Si bebes, no conduzcas.</p>
+</footer>
+
+<!-- CARRITO -->
+<div class="fondo-oscuro" id="fondoOscuro"></div>
+<aside class="panel" id="panelCarrito" aria-label="Carrito de compras">
+  <button class="cerrar" id="cerrarCarrito" aria-label="Cerrar carrito">✕</button>
+  <h3>🛒 Tu carrito</h3>
+  <div id="listaCarrito"></div>
+  <div class="total"><span>Total</span><span id="total">$0.00</span></div>
+  <button class="boton" id="btnFinalizar">Finalizar (demo)</button>
+  <button class="btn-sec" id="btnVaciar" style="margin-top:.6rem">Vaciar carrito</button>
+</aside>
+
+<!-- DETALLE DE PRODUCTO -->
+<div class="modal oculto" id="modalDetalle">
+  <div class="modal-caja" id="detalleContenido"></div>
+</div>
+
+<div class="aviso" id="aviso">Agregado ✔</div>
+
+<script>
+/* ===== DATOS (10 licores ficticios) ===== */
+const productos = [
+  {id:1, nombre:"Highland Oro 12", cat:"Whisky", precio:38.50, color:"#b8691c", forma:"cuadrada", badge:"Más vendido",
+   desc:"Whisky añejado 12 años con notas de miel, roble y un final ahumado suave."},
+  {id:2, nombre:"Ron Caribe Negro", cat:"Ron", precio:22.90, color:"#5a2410", forma:"cuadrada", badge:"Favorito",
+   desc:"Ron oscuro con aromas a caramelo, vainilla y especias. Perfecto solo o con cola."},
+  {id:3, nombre:"Vodka Ártico Premium", cat:"Vodka", precio:19.75, color:"#9ed8f0", forma:"alta", badge:"",
+   desc:"Destilado cinco veces, limpio y cristalino. La base ideal para tus cócteles."},
+  {id:4, nombre:"Tequila Agave Reposado", cat:"Tequila", precio:29.90, color:"#e8b94a", forma:"alta", badge:"Nuevo",
+   desc:"100% agave azul, reposado en barrica. Sabor intenso con toque cítrico."},
+  {id:5, nombre:"Gin Jardín Botánico", cat:"Gin", precio:26.40, color:"#7fcfa8", forma:"alta", badge:"",
+   desc:"Gin fresco con enebro, pepino y cítricos. Sírvelo con tónica y mucho hielo."},
+  {id:6, nombre:"Vino Tinto Reserva", cat:"Vino", precio:15.20, color:"#7a1230", forma:"vino", badge:"Oferta",
+   desc:"Malbec con cuerpo y taninos suaves. Ideal para carnes y noches especiales."},
+  {id:7, nombre:"Vino Blanco Brisa", cat:"Vino", precio:13.80, color:"#d9e17a", forma:"vino", badge:"",
+   desc:"Sauvignon fresco y frutal, con aromas a durazno. Sirve bien frío."},
+  {id:8, nombre:"Cerveza Artesanal Ámbar", cat:"Cerveza", precio:3.60, color:"#d98a1b", forma:"cerveza", badge:"Artesanal",
+   desc:"Cerveza ámbar con carácter maltoso y espuma cremosa. Botella de 500 ml."},
+  {id:9, nombre:"Brandy Gran Solera", cat:"Otros", precio:24.30, color:"#a5461a", forma:"cuadrada", badge:"",
+   desc:"Brandy suave envejecido en roble, con notas de pasas y almendra."},
+  {id:10, nombre:"Licor de Café Nocturno", cat:"Otros", precio:17.90, color:"#3a1f12", forma:"vino", badge:"Postre",
+   desc:"Licor cremoso de café tostado. Delicioso con hielo o sobre helado."}
+];
+
+/* ===== IMAGENES: botellas dibujadas en SVG ===== */
+function botellaSVG(p){
+  const c = p.color;
+  let cuerpo = "";
+  if(p.forma === "cuadrada"){
+    cuerpo = `<rect x="46" y="6" width="28" height="14" rx="3" fill="#222"/>
+      <rect x="50" y="20" width="20" height="30" fill="${c}" opacity=".9"/>
+      <rect x="28" y="48" width="64" height="146" rx="12" fill="${c}"/>`;
+  } else if(p.forma === "alta"){
+    cuerpo = `<rect x="50" y="6" width="20" height="14" rx="3" fill="#222"/>
+      <rect x="53" y="20" width="14" height="52" fill="${c}" opacity=".9"/>
+      <rect x="36" y="68" width="48" height="126" rx="14" fill="${c}"/>`;
+  } else if(p.forma === "vino"){
+    cuerpo = `<rect x="52" y="6" width="16" height="16" rx="3" fill="#6b1d1d"/>
+      <rect x="53" y="22" width="14" height="58" fill="${c}" opacity=".9"/>
+      <rect x="34" y="76" width="52" height="118" rx="22" fill="${c}"/>`;
+  } else { /* cerveza */
+    cuerpo = `<rect x="50" y="8" width="20" height="10" rx="3" fill="#e0b04a"/>
+      <rect x="54" y="18" width="12" height="56" fill="${c}" opacity=".9"/>
+      <rect x="38" y="70" width="44" height="124" rx="10" fill="${c}"/>`;
+  }
+  const inicial = p.nombre.charAt(0);
+  return `<svg viewBox="0 0 120 200" role="img" aria-label="Botella de ${p.nombre}" xmlns="http://www.w3.org/2000/svg">
+    ${cuerpo}
+    <rect x="36" y="112" width="48" height="52" rx="4" fill="#f6efe0"/>
+    <rect x="36" y="112" width="48" height="8" fill="#e0b04a"/>
+    <text x="60" y="150" text-anchor="middle" font-size="28" font-weight="700" fill="#2a1d10" font-family="Georgia,serif">${inicial}</text>
+    <rect x="40" y="60" width="6" height="128" rx="3" fill="#fff" opacity=".18"/>
+  </svg>`;
+}
+
+/* ===== REFERENCIAS ===== */
+const rejilla = document.getElementById("rejilla");
+const busqueda = document.getElementById("busqueda");
+const sinResultados = document.getElementById("sinResultados");
+const filtros = document.querySelectorAll(".filtro");
+let categoriaActual = "Todos";
+let carrito = JSON.parse(JSON.stringify([])); // { id, cantidad }
+
+/* ===== DIBUJAR CATALOGO ===== */
+function dinero(n){ return "$" + n.toFixed(2); }
+
+function dibujarCatalogo(){
+  rejilla.innerHTML = productos.map(p => `
+    <article class="producto" data-id="${p.id}" data-cat="${p.cat}">
+      ${p.badge ? `<span class="insignia">${p.badge}</span>` : ""}
+      <div class="imagen">${botellaSVG(p)}</div>
+      <span class="categoria">${p.cat}</span>
+      <h3>${p.nombre}</h3>
+      <p class="desc">${p.desc}</p>
+      <div class="fila">
+        <span class="precio">${dinero(p.precio)}</span>
+        <button class="btn-agregar" data-agregar="${p.id}">+ Agregar</button>
+      </div>
+      <button class="btn-detalle" data-detalle="${p.id}">Ver detalles</button>
+    </article>`).join("");
+}
+
+/* ===== FILTRAR Y BUSCAR ===== */
+function aplicarFiltros(){
+  const q = busqueda.value.trim().toLocaleLowerCase("es");
+  let visibles = 0;
+  document.querySelectorAll(".producto").forEach(t => {
+    const okCat = categoriaActual === "Todos" || t.dataset.cat === categoriaActual;
+    const okTxt = t.textContent.toLocaleLowerCase("es").includes(q);
+    const mostrar = okCat && okTxt;
+    t.hidden = !mostrar;
+    if(mostrar) visibles++;
+  });
+  sinResultados.classList.toggle("oculto", visibles > 0);
+}
+
+filtros.forEach(b => b.addEventListener("click", () => {
+  filtros.forEach(x => x.classList.remove("activo"));
+  b.classList.add("activo");
+  categoriaActual = b.dataset.cat;
+  aplicarFiltros();
+}));
+busqueda.addEventListener("input", aplicarFiltros);
+
+/* ===== CARRITO ===== */
+const panel = document.getElementById("panelCarrito");
+const fondo = document.getElementById("fondoOscuro");
+const lista = document.getElementById("listaCarrito");
+
+function abrirCarrito(){ panel.classList.add("abierto"); fondo.classList.add("visible"); }
+function cerrarCarrito(){ panel.classList.remove("abierto"); fondo.classList.remove("visible"); }
+
+function mostrarAviso(texto){
+  const a = document.getElementById("aviso");
+  a.textContent = texto;
+  a.classList.add("visible");
+  clearTimeout(mostrarAviso.t);
+  mostrarAviso.t = setTimeout(() => a.classList.remove("visible"), 1800);
+}
+
+function agregar(id){
+  const item = carrito.find(i => i.id === id);
+  if(item) item.cantidad++; else carrito.push({id, cantidad:1});
+  dibujarCarrito();
+  const p = productos.find(x => x.id === id);
+  mostrarAviso("✔ " + p.nombre + " agregado");
+}
+
+function cambiarCantidad(id, delta){
+  const item = carrito.find(i => i.id === id);
+  if(!item) return;
+  item.cantidad += delta;
+  if(item.cantidad <= 0) carrito = carrito.filter(i => i.id !== id);
+  dibujarCarrito();
+}
+
+function dibujarCarrito(){
+  let total = 0, cantidad = 0;
+  if(carrito.length === 0){
+    lista.innerHTML = "<p class='vacio'>Tu carrito está vacío 🥂</p>";
+  } else {
+    lista.innerHTML = carrito.map(i => {
+      const p = productos.find(x => x.id === i.id);
+      total += p.precio * i.cantidad;
+      cantidad += i.cantidad;
+      return `<div class="item">
+        <div><strong>${p.nombre}</strong><br><small>${dinero(p.precio)} c/u</small></div>
+        <div>
+          <button data-menos="${p.id}" aria-label="Quitar uno">−</button>
+          <strong> ${i.cantidad} </strong>
+          <button data-mas="${p.id}" aria-label="Agregar uno">+</button>
+        </div>
+      </div>`;
+    }).join("");
+  }
+  document.getElementById("total").textContent = dinero(total);
+  document.getElementById("contador").textContent = cantidad;
+}
+
+lista.addEventListener("click", e => {
+  if(e.target.dataset.mas) cambiarCantidad(Number(e.target.dataset.mas), 1);
+  if(e.target.dataset.menos) cambiarCantidad(Number(e.target.dataset.menos), -1);
+});
+
+document.getElementById("btnCarrito").addEventListener("click", abrirCarrito);
+document.getElementById("cerrarCarrito").addEventListener("click", cerrarCarrito);
+fondo.addEventListener("click", cerrarCarrito);
+document.getElementById("btnVaciar").addEventListener("click", () => { carrito = []; dibujarCarrito(); });
+document.getElementById("btnFinalizar").addEventListener("click", () => {
+  alert("Esto es solo una demostración educativa: no se procesan pedidos ni pagos.");
+});
+
+/* ===== CLICS EN TARJETAS (agregar / detalles) ===== */
+rejilla.addEventListener("click", e => {
+  if(e.target.dataset.agregar) agregar(Number(e.target.dataset.agregar));
+  if(e.target.dataset.detalle) abrirDetalle(Number(e.target.dataset.detalle));
+});
+
+/* ===== MODAL DE DETALLE ===== */
+const modalDetalle = document.getElementById("modalDetalle");
+function abrirDetalle(id){
+  const p = productos.find(x => x.id === id);
+  document.getElementById("detalleContenido").innerHTML = `
+    <div class="imagen">${botellaSVG(p)}</div>
+    <span class="categoria">${p.cat}</span>
+    <h2>${p.nombre}</h2>
+    <p>${p.desc}</p>
+    <p class="precio" style="margin-bottom:1rem">${dinero(p.precio)}</p>
+    <div class="botones">
+      <button class="boton" id="detAgregar">Agregar al carrito</button>
+      <button class="btn-sec" id="detCerrar">Cerrar</button>
+    </div>`;
+  modalDetalle.classList.remove("oculto");
+  document.getElementById("detAgregar").onclick = () => { agregar(p.id); modalDetalle.classList.add("oculto"); };
+  document.getElementById("detCerrar").onclick = () => modalDetalle.classList.add("oculto");
+}
+modalDetalle.addEventListener("click", e => { if(e.target === modalDetalle) modalDetalle.classList.add("oculto"); });
+
+/* ===== MENU MOVIL ===== */
+const botonMenu = document.getElementById("menuBoton");
+const menu = document.getElementById("menuPrincipal");
+botonMenu.addEventListener("click", () => {
+  const abierto = menu.classList.toggle("abierto");
+  botonMenu.setAttribute("aria-expanded", String(abierto));
+});
+menu.addEventListener("click", e => { if(e.target.tagName === "A") menu.classList.remove("abierto"); });
+
+/* ===== VERIFICACION DE EDAD ===== */
+const modalEdad = document.getElementById("modalEdad");
+document.getElementById("btnSoyMayor").addEventListener("click", () => modalEdad.classList.add("oculto"));
+document.getElementById("btnSoyMenor").addEventListener("click", () => {
+  modalEdad.querySelector(".modal-caja").innerHTML =
+    "<h2>Hasta pronto 👋</h2><p>Este sitio es solo para mayores de edad. Gracias por tu honestidad.</p>";
+});
+
+/* ===== INICIO ===== */
+dibujarCatalogo();
+dibujarCarrito();
+</script>
+</body>
+</html>
